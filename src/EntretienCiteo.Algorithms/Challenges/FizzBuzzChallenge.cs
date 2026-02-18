@@ -10,12 +10,12 @@ public class FizzBuzzChallenge : IChallenge
     public string Title => "FizzBuzz";
 
     public string Description => """
-        Print numbers from 1 to n.
-        - If divisible by 3, print "Fizz" instead.
-        - If divisible by 5, print "Buzz" instead.
-        - If divisible by both 3 and 5, print "FizzBuzz" instead.
+        Afficher les nombres de 1 to n.
+        - Si divisible par 3, afficher "Fizz".
+        - Si divisible par 5, afficher "Buzz".
+        - Si divisible par 3 et 5, afficher "FizzBuzz".
 
-        Return the result as a List<string>.
+        Renvoyer les résultats dans une List<string>.
         """;
 
     public void RunTests()

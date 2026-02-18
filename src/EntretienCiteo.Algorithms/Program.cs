@@ -6,7 +6,7 @@ Console.WriteLine();
 var challenges = new Dictionary<string, IChallenge>
 {
     ["1"] = new FizzBuzzChallenge(),
-    ["2"] = new BalancedParenthesesChallenge(),
+    ["2"] = new Challenge1(),
     ["3"] = new TopKFrequentChallenge(),
     ["4"] = new LongestSubstringChallenge(),
 };
