@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EntretienCiteo.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260218221838_InitialCreate")]
+    [Migration("20260219180336_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -39,15 +39,8 @@ namespace EntretienCiteo.Api.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("integer")
-                        .HasColumnName("parent_category_id");
-
                     b.HasKey("Id")
                         .HasName("pk_categories");
-
-                    b.HasIndex("ParentCategoryId")
-                        .HasDatabaseName("ix_categories_parent_category_id");
 
                     b.ToTable("categories");
 
@@ -70,26 +63,22 @@ namespace EntretienCiteo.Api.Migrations
                         new
                         {
                             Id = 4,
-                            Name = "Smartphones",
-                            ParentCategoryId = 1
+                            Name = "Smartphones"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "Laptops",
-                            ParentCategoryId = 1
+                            Name = "Laptops"
                         },
                         new
                         {
                             Id = 6,
-                            Name = "Men's Clothing",
-                            ParentCategoryId = 2
+                            Name = "Men's Clothing"
                         },
                         new
                         {
                             Id = 7,
-                            Name = "Women's Clothing",
-                            ParentCategoryId = 2
+                            Name = "Women's Clothing"
                         });
                 });
 
@@ -661,17 +650,6 @@ namespace EntretienCiteo.Api.Migrations
                         });
                 });
 
-            modelBuilder.Entity("EntretienCiteo.Api.Entities.Category", b =>
-                {
-                    b.HasOne("EntretienCiteo.Api.Entities.Category", "ParentCategory")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("ParentCategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_categories_categories_parent_category_id");
-
-                    b.Navigation("ParentCategory");
-                });
-
             modelBuilder.Entity("EntretienCiteo.Api.Entities.Order", b =>
                 {
                     b.HasOne("EntretienCiteo.Api.Entities.Customer", "Customer")
@@ -720,8 +698,6 @@ namespace EntretienCiteo.Api.Migrations
             modelBuilder.Entity("EntretienCiteo.Api.Entities.Category", b =>
                 {
                     b.Navigation("Products");
-
-                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("EntretienCiteo.Api.Entities.Customer", b =>

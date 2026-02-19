@@ -1,7 +1,3 @@
-using EntretienCiteo.Api.Data;
-using EntretienCiteo.Api.Entities;
-using Microsoft.EntityFrameworkCore;
-
 namespace EntretienCiteo.Api.Endpoints;
 
 public static class ReportEndpoints
@@ -21,6 +17,9 @@ public static class ReportEndpoints
         DateTime? from = null,
         DateTime? to = null)
     {
+        // On veut remonter le top des N produits les plus vendus sur une période donnée,
+        // avec le chiffre d'affaires généré et la quantité vendue.
+
         var results = new List<TopProductResult>();
 
         return Results.Ok(results);

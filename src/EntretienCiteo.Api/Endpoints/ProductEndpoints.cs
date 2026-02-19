@@ -1,7 +1,3 @@
-using EntretienCiteo.Api.Data;
-using EntretienCiteo.Api.Entities;
-using Microsoft.EntityFrameworkCore;
-
 namespace EntretienCiteo.Api.Endpoints;
 
 public static class ProductEndpoints
@@ -10,10 +6,17 @@ public static class ProductEndpoints
     {
         var group = app.MapGroup("/products").WithTags("Products");
 
-        group.MapGet("/", GetProducts);
         group.MapGet("/{id:int}", GetProductById);
+        group.MapGet("/", GetProducts);
 
         return app;
+    }
+
+    // GET /products/{id}
+    private static IResult GetProductById(int id)
+    {
+        //Renvoyer le produit correspondant via le DTO ProductDetail
+        return Results.Ok();
     }
 
     // GET /products?page=1&pageSize=10&categoryId=1&minPrice=10&maxPrice=500
@@ -24,20 +27,12 @@ public static class ProductEndpoints
         decimal? minPrice = null,
         decimal? maxPrice = null)
     {
-        var items = new List<ProductListItem>();
-        return Results.Ok(new PagedResult<ProductListItem>(items, 1, page, pageSize));
-    }
-
-    // GET /products/{id}
-    private static IResult GetProductById(int id)
-    {
-        //Renvoyer un ProductDetail
-        return Results.Ok();
+        var items = new List<ProductDetail>();
+        return Results.Ok(new PagedResult<ProductDetail>(items, 1, page, pageSize));
     }
 
     // DTOs
-    public record ProductListItem(int Id, string Name, decimal Price, int Stock, string CategoryName);
     public record ProductDetail(int Id, string Name, decimal Price, int Stock, CategoryInfo Category);
-    public record CategoryInfo(int Id, string Name, CategoryInfo? Parent);
+    public record CategoryInfo(int Id, string Name);
     public record PagedResult<T>(IReadOnlyList<T> Items, int Total, int Page, int PageSize);
 }
