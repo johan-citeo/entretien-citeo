@@ -1,23 +1,22 @@
 namespace EntretienCiteo.Algorithms.Challenges;
 
 /// <summary>
-/// CHALLENGE 3 — Top K Frequent Elements
+/// CHALLENGE 3 
 ///
 /// TODO: Implement the TopKFrequent method below.
 /// </summary>
-public class TopKFrequentChallenge : IChallenge
+public class Challenge3 : IChallenge
 {
-    public string Title => "Top K Frequent Elements";
+    public string Title => "Challenge3";
 
     public string Description => """
-        Given an integer array and an integer k, return the k most frequent elements.
-        The answer may be returned in any order.
+        En se basant sur un tableau d'entiers et un entier k, il faut retourner les k
+        éléments les plus fréquents. (Peu importe l'ordre)
 
-        Examples:
+        Exemples:
           [1,1,1,2,2,3], k=2  =>  [1, 2]
           [1], k=1             =>  [1]
-
-        Constraint: Your solution must be better than O(n log n).
+          
         """;
 
     public void RunTests()
@@ -35,10 +34,9 @@ public class TopKFrequentChallenge : IChallenge
             var expectedSorted = expected.OrderByDescending(x => x).ToArray();
             var label = $"TopKFrequent([{string.Join(",", nums)}], {k})";
 
-            if (result.SequenceEqual(expectedSorted))
-                Console.WriteLine($"  [PASS] {label} => [{string.Join(", ", result)}]");
-            else
-                Console.WriteLine($"  [FAIL] {label} => expected [{string.Join(", ", expectedSorted)}], got [{string.Join(", ", result)}]");
+            Console.WriteLine(result.SequenceEqual(expectedSorted)
+                ? $"  [PASS] {label} => [{string.Join(", ", result)}]"
+                : $"  [FAIL] {label} => expected [{string.Join(", ", expectedSorted)}], got [{string.Join(", ", result)}]");
         }
     }
 

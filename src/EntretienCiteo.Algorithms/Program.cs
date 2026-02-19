@@ -5,10 +5,10 @@ Console.WriteLine();
 
 var challenges = new Dictionary<string, IChallenge>
 {
-    ["1"] = new FizzBuzzChallenge(),
-    ["2"] = new Challenge1(),
-    ["3"] = new TopKFrequentChallenge(),
-    ["4"] = new LongestSubstringChallenge(),
+    ["1"] = new Challenge1(),
+    ["2"] = new Challenge2(),
+    ["3"] = new Challenge3(),
+    ["4"] = new Challenge4(),
 };
 
 while (true)

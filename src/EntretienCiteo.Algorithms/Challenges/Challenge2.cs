@@ -1,19 +1,19 @@
 namespace EntretienCiteo.Algorithms.Challenges;
 
 /// <summary>
-/// CHALLENGE 1 — FizzBuzz (Warm-up)
+/// CHALLENGE 1 — HelloWorld
 ///
-/// TODO: Implement the FizzBuzz method below.
+/// TODO: Implement the HelloWorld method below.
 /// </summary>
-public class FizzBuzzChallenge : IChallenge
+public class Challenge2 : IChallenge
 {
-    public string Title => "FizzBuzz";
+    public string Title => "Challenge2";
 
     public string Description => """
         Afficher les nombres de 1 to n.
-        - Si divisible par 3, afficher "Fizz".
-        - Si divisible par 5, afficher "Buzz".
-        - Si divisible par 3 et 5, afficher "FizzBuzz".
+        - Si divisible par 3, afficher "Hello".
+        - Si divisible par 5, afficher "World".
+        - Si divisible par 3 et 5, afficher "HelloWorld".
 
         Renvoyer les résultats dans une List<string>.
         """;
@@ -24,12 +24,12 @@ public class FizzBuzzChallenge : IChallenge
 
         var expected = new List<string>
         {
-            "1", "2", "Fizz", "4", "Buzz",
-            "Fizz", "7", "8", "Fizz", "Buzz",
-            "11", "Fizz", "13", "14", "FizzBuzz"
+            "1", "2", "Hello", "4", "World",
+            "Hello", "7", "8", "Hello", "World",
+            "11", "Hello", "13", "14", "HelloWorld"
         };
 
-        AssertEqual(result, expected, "FizzBuzz(15)");
+        AssertEqual(result, expected, "HelloWorld(15)");
     }
 
     // =============================================
@@ -37,7 +37,7 @@ public class FizzBuzzChallenge : IChallenge
     // =============================================
     public static List<string> FizzBuzz(int n)
     {
-        throw new NotImplementedException("TODO: implement FizzBuzz");
+        throw new NotImplementedException("TODO: implement HelloWorld");
     }
 
     private static void AssertEqual(List<string> actual, List<string> expected, string testName)
