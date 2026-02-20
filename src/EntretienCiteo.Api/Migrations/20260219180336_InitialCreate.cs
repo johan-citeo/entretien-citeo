@@ -20,18 +20,11 @@ namespace EntretienCiteo.Api.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    parent_category_id = table.Column<int>(type: "integer", nullable: true)
+                    name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_categories", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_categories_categories_parent_category_id",
-                        column: x => x.parent_category_id,
-                        principalTable: "categories",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,12 +115,16 @@ namespace EntretienCiteo.Api.Migrations
 
             migrationBuilder.InsertData(
                 table: "categories",
-                columns: new[] { "id", "name", "parent_category_id" },
+                columns: new[] { "id", "name" },
                 values: new object[,]
                 {
-                    { 1, "Electronics", null },
-                    { 2, "Clothing", null },
-                    { 3, "Books", null }
+                    { 1, "Electronics" },
+                    { 2, "Clothing" },
+                    { 3, "Books" },
+                    { 4, "Smartphones" },
+                    { 5, "Laptops" },
+                    { 6, "Men's Clothing" },
+                    { 7, "Women's Clothing" }
                 });
 
             migrationBuilder.InsertData(
@@ -145,17 +142,6 @@ namespace EntretienCiteo.Api.Migrations
                     { 8, "helene@example.com", "Hélène Petit" },
                     { 9, "ivan@example.com", "Ivan Rousseau" },
                     { 10, "julie@example.com", "Julie Blanc" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "categories",
-                columns: new[] { "id", "name", "parent_category_id" },
-                values: new object[,]
-                {
-                    { 4, "Smartphones", 1 },
-                    { 5, "Laptops", 1 },
-                    { 6, "Men's Clothing", 2 },
-                    { 7, "Women's Clothing", 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -186,6 +172,12 @@ namespace EntretienCiteo.Api.Migrations
                 columns: new[] { "id", "category_id", "name", "price", "row_version", "stock" },
                 values: new object[,]
                 {
+                    { 1, 4, "iPhone 16", 999.99m, new Guid("a1000000-0000-0000-0000-000000000001"), 50 },
+                    { 2, 4, "Samsung Galaxy S25", 849.99m, new Guid("a1000000-0000-0000-0000-000000000002"), 40 },
+                    { 3, 5, "MacBook Pro 14\"", 1999.99m, new Guid("a1000000-0000-0000-0000-000000000003"), 20 },
+                    { 4, 5, "Dell XPS 15", 1599.99m, new Guid("a1000000-0000-0000-0000-000000000004"), 25 },
+                    { 5, 6, "Men's T-Shirt", 29.99m, new Guid("a1000000-0000-0000-0000-000000000005"), 200 },
+                    { 6, 7, "Women's Dress", 59.99m, new Guid("a1000000-0000-0000-0000-000000000006"), 150 },
                     { 7, 3, "Clean Code", 39.99m, new Guid("a1000000-0000-0000-0000-000000000007"), 100 },
                     { 8, 3, "The Pragmatic Programmer", 44.99m, new Guid("a1000000-0000-0000-0000-000000000008"), 80 }
                 });
@@ -195,55 +187,30 @@ namespace EntretienCiteo.Api.Migrations
                 columns: new[] { "id", "order_id", "product_id", "quantity", "unit_price" },
                 values: new object[,]
                 {
-                    { 2, 1, 7, 1, 39.99m },
-                    { 7, 4, 8, 1, 44.99m },
-                    { 9, 6, 7, 2, 39.99m },
-                    { 10, 6, 8, 3, 44.99m },
-                    { 16, 11, 7, 1, 39.99m },
-                    { 22, 15, 8, 1, 44.99m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "products",
-                columns: new[] { "id", "category_id", "name", "price", "row_version", "stock" },
-                values: new object[,]
-                {
-                    { 1, 4, "iPhone 16", 999.99m, new Guid("a1000000-0000-0000-0000-000000000001"), 50 },
-                    { 2, 4, "Samsung Galaxy S25", 849.99m, new Guid("a1000000-0000-0000-0000-000000000002"), 40 },
-                    { 3, 5, "MacBook Pro 14\"", 1999.99m, new Guid("a1000000-0000-0000-0000-000000000003"), 20 },
-                    { 4, 5, "Dell XPS 15", 1599.99m, new Guid("a1000000-0000-0000-0000-000000000004"), 25 },
-                    { 5, 6, "Men's T-Shirt", 29.99m, new Guid("a1000000-0000-0000-0000-000000000005"), 200 },
-                    { 6, 7, "Women's Dress", 59.99m, new Guid("a1000000-0000-0000-0000-000000000006"), 150 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "order_lines",
-                columns: new[] { "id", "order_id", "product_id", "quantity", "unit_price" },
-                values: new object[,]
-                {
                     { 1, 1, 1, 2, 999.99m },
+                    { 2, 1, 7, 1, 39.99m },
                     { 3, 2, 3, 1, 1999.99m },
                     { 4, 3, 5, 3, 29.99m },
                     { 5, 3, 6, 1, 59.99m },
                     { 6, 4, 2, 1, 849.99m },
+                    { 7, 4, 8, 1, 44.99m },
                     { 8, 5, 4, 1, 1599.99m },
+                    { 9, 6, 7, 2, 39.99m },
+                    { 10, 6, 8, 3, 44.99m },
                     { 11, 7, 1, 1, 999.99m },
                     { 12, 7, 2, 1, 849.99m },
                     { 13, 8, 6, 2, 59.99m },
                     { 14, 9, 3, 1, 1999.99m },
                     { 15, 10, 5, 5, 29.99m },
+                    { 16, 11, 7, 1, 39.99m },
                     { 17, 12, 1, 3, 999.99m },
                     { 18, 13, 4, 1, 1599.99m },
                     { 19, 13, 2, 2, 849.99m },
                     { 20, 14, 6, 4, 59.99m },
                     { 21, 14, 5, 2, 29.99m },
+                    { 22, 15, 8, 1, 44.99m },
                     { 23, 16, 3, 1, 1999.99m }
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "ix_categories_parent_category_id",
-                table: "categories",
-                column: "parent_category_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_order_lines_order_id",
