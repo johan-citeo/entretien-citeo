@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BOUT-142 Promotions</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-subtle: #f7f8f9;
+    --bg-hover: #f1f2f4;
+    --border: #dcdfe4;
+    --text: #172b4d;
+    --text-subtle: #44546f;
+    --text-muted: #626f86;
+    --link: #0c66e4;
+    --story: #63ba3c;
+    --todo-bg: #dfe1e6;
+    --todo-text: #44546f;
+    --prio: #e2483d;
+    --code-bg: #f1f2f4;
+    --info-bg: #e9f2ff;
+    --info-border: #579dff;
+    --warn-bg: #fff7d6;
+    --warn-border: #f5cd47;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .topbar {
+    height: 56px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; padding: 0 20px;
+    background: var(--bg);
+  }
+  .topbar .logo {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: linear-gradient(135deg, #2684ff, #0052cc);
+    color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 13px;
+  }
+  .topbar .app { font-weight: 600; }
+  .topbar .search {
+    margin-left: auto; width: 240px; max-width: 40vw; height: 32px; border: 1px solid var(--border);
+    border-radius: 4px; padding: 0 10px; color: var(--text-muted); display: flex; align-items: center;
+    font-size: 13px;
+  }
+  .page { max-width: 1280px; margin: 0 auto; padding: 20px; }
+  .breadcrumb { color: var(--text-muted); font-size: 13px; margin-bottom: 8px; }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+  .breadcrumb .key { display: inline-flex; align-items: center; gap: 6px; }
+  .type-icon {
+    display: inline-block; width: 16px; height: 16px; border-radius: 3px; background: var(--story);
+    position: relative; vertical-align: -3px;
+  }
+  .type-icon::after {
+    content: ""; position: absolute; left: 5px; top: 3px; width: 6px; height: 8px;
+    background: #fff; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);
+  }
+  h1 { font-size: 24px; line-height: 1.3; margin: 4px 0 16px; font-weight: 600; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 32px; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+  .actions { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .btn {
+    border: none; background: var(--bg-hover); color: var(--text); border-radius: 3px;
+    padding: 6px 12px; font: inherit; font-weight: 500;
+  }
+  h2 { font-size: 16px; margin: 28px 0 8px; font-weight: 600; }
+  h3 { font-size: 14px; margin: 20px 0 6px; font-weight: 600; }
+  p { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 10px; padding-left: 22px; }
+  li { margin: 2px 0; }
+  code {
+    background: var(--code-bg); border-radius: 3px; padding: 1px 4px;
+    font: 12.5px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+  .panel { border-left: 3px solid; border-radius: 3px; padding: 10px 14px; margin: 12px 0; }
+  .panel.info { background: var(--info-bg); border-color: var(--info-border); }
+  .panel.warn { background: var(--warn-bg); border-color: var(--warn-border); }
+  .table-wrap { overflow-x: auto; margin: 8px 0 14px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--bg-subtle); font-weight: 600; }
+  td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .gwt { border: 1px solid var(--border); border-radius: 4px; padding: 10px 14px; margin: 10px 0; }
+  .gwt .title { font-weight: 600; margin-bottom: 4px; }
+  .gwt .kw { font-weight: 700; color: var(--text-subtle); }
+  .side {
+    border: 1px solid var(--border); border-radius: 4px; align-self: start;
+  }
+  .side .head { padding: 10px 14px; border-bottom: 1px solid var(--border); font-weight: 600; }
+  .status {
+    display: inline-block; background: var(--todo-bg); color: var(--todo-text); font-weight: 700;
+    font-size: 12px; text-transform: uppercase; padding: 2px 8px; border-radius: 3px;
+  }
+  dl { margin: 0; padding: 6px 14px 12px; display: grid; grid-template-columns: 120px 1fr; gap: 10px 8px; }
+  dt { color: var(--text-muted); font-size: 13px; }
+  dd { margin: 0; font-size: 13px; }
+  .avatar {
+    display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+    color: #fff; font-size: 11px; font-weight: 700; vertical-align: middle; margin-right: 6px;
+  }
+  .label {
+    display: inline-block; background: var(--bg-hover); border-radius: 3px; padding: 0 6px;
+    font-size: 12px; margin: 0 4px 4px 0;
+  }
+  .prio { color: var(--prio); font-weight: 700; }
+  .meta { color: var(--text-muted); font-size: 12px; padding: 0 14px 12px; }
+  .comment { display: grid; grid-template-columns: 32px 1fr; gap: 10px; margin: 16px 0; }
+  .comment .avatar { width: 32px; height: 32px; font-size: 12px; margin: 0; }
+  .comment .who { font-weight: 600; }
+  .comment .when { color: var(--text-muted); font-size: 12px; margin-left: 6px; font-weight: 400; }
+  .tabs { display: flex; gap: 16px; border-bottom: 1px solid var(--border); margin: 8px 0 4px; font-size: 13px; }
+  .tabs span { padding: 6px 0; color: var(--text-muted); }
+  .tabs span.active { color: var(--link); border-bottom: 2px solid var(--link); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">B</div>
+  <div class="app">Boutique · Gestion de projet</div>
+  <div class="search">Rechercher</div>
+</div>
+
+<div class="page">
+  <div class="breadcrumb">
+    <a href="#">Projets</a> / <a href="#">Boutique en ligne (BOUT)</a> / <a href="#">BOUT-120 Refonte du tunnel de commande</a> /
+    <span class="key"><span class="type-icon"></span> BOUT-142</span>
+  </div>
+
+  <h1>Appliquer des promotions configurables par le marketing lors de la création d'une commande</h1>
+
+  <div class="layout">
+    <main>
+      <div class="actions">
+        <span class="btn">Joindre</span>
+        <span class="btn">Ajouter une sous-tâche</span>
+        <span class="btn">Lier un ticket</span>
+      </div>
+
+      <h2>Description</h2>
+
+      <p><strong>En tant que</strong> responsable marketing,<br>
+      <strong>je veux</strong> pouvoir créer et activer des promotions sans dépendre d'une mise en production,<br>
+      <strong>afin de</strong> lancer rapidement des opérations commerciales et augmenter le panier moyen.</p>
+
+      <h3>Contexte</h3>
+      <p>Aujourd'hui, le total d'une commande est calculé uniquement à partir du prix unitaire des produits au moment de la commande
+      (<code>OrderLine.UnitPrice</code>). Le marketing veut pouvoir lancer des promotions de façon autonome. Le client doit voir,
+      dans le détail de sa commande, quelles remises ont été appliquées et pour quel montant.</p>
+
+      <h3>Types de promotions à supporter</h3>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Description</th><th>Exemple</th></tr></thead>
+        <tbody>
+          <tr><td>Remise catégorie</td><td>Pourcentage de réduction sur tous les produits d'une catégorie.</td><td>-20 % sur la catégorie <em>Books</em></td></tr>
+          <tr><td>Lot « X achetés, Y payés »</td><td>Pour un produit donné, le client achète X articles et n'en paie que Y.</td><td>3 <em>Men's T-Shirt</em> achetés, 2 payés</td></tr>
+          <tr><td>Remise panier</td><td>Montant fixe déduit à partir d'un montant de commande minimum.</td><td>-50 € dès 500 € d'achat</td></tr>
+          <tr><td>Code promo</td><td>Pourcentage de réduction sur la commande, déclenché par un code saisi par le client. Utilisable une seule fois par client.</td><td><code>BIENVENUE10</code> : -10 %</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>Règles de gestion</h3>
+      <ol>
+        <li><strong>RG1</strong> : une promotion a un nom, un type, des paramètres propres à son type, une date de début et une date de fin. Elle peut être activée ou désactivée.</li>
+        <li><strong>RG2</strong> : seules les promotions actives et dont la période de validité couvre la date de la commande sont appliquées.</li>
+        <li><strong>RG3</strong> : le code promo est facultatif dans la requête de création de commande. Un code inconnu, expiré ou déjà utilisé par le client entraîne le refus de la commande avec un message explicite.</li>
+        <li><strong>RG4</strong> : les montants sont exprimés en euros et arrondis au centime.</li>
+        <li><strong>RG5</strong> : la commande conserve le détail des remises appliquées (promotion, montant de la remise). Ce détail ne doit pas changer si la promotion est modifiée ensuite.</li>
+        <li><strong>RG6</strong> : le marketing gère les promotions via l'API (création, consultation, modification, désactivation). Aucune promotion ne doit être codée en dur.</li>
+      </ol>
+
+      <h3>Promotions de référence (jeu de données de recette)</h3>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Réf.</th><th>Nom</th><th>Type</th><th>Paramètres</th></tr></thead>
+        <tbody>
+          <tr><td>P1</td><td>Rentrée littéraire</td><td>Remise catégorie</td><td>Catégorie <em>Books</em> (id 3), -20 %</td></tr>
+          <tr><td>P2</td><td>Lot T-shirts</td><td>Lot X achetés, Y payés</td><td>Produit <em>Men's T-Shirt</em> (id 5), 3 achetés, 2 payés</td></tr>
+          <tr><td>P3</td><td>Gros panier</td><td>Remise panier</td><td>-50 € dès 500 €</td></tr>
+          <tr><td>P4</td><td>Bienvenue</td><td>Code promo</td><td>Code <code>BIENVENUE10</code>, -10 %</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>Exemples de paniers validés par le marketing</h3>
+      <p>Toutes les promotions P1 à P4 sont actives. Le code promo n'est appliqué que lorsqu'il est indiqué.</p>
+      <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Panier</th><th>Code</th><th class="num">Sous-total</th><th class="num">Total attendu</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>E1</td><td>2 × Clean Code (39,99 €)</td><td>–</td><td class="num">79,98 €</td><td class="num">63,98 €</td></tr>
+          <tr><td>E2</td><td>3 × Men's T-Shirt (29,99 €)</td><td>–</td><td class="num">89,97 €</td><td class="num">59,98 €</td></tr>
+          <tr><td>E3</td><td>4 × Men's T-Shirt (29,99 €)</td><td>–</td><td class="num">119,96 €</td><td class="num">89,97 €</td></tr>
+          <tr><td>E4</td><td>1 × iPhone 16 (999,99 €)</td><td>–</td><td class="num">999,99 €</td><td class="num">949,99 €</td></tr>
+          <tr><td>E5</td><td>1 × iPhone 16 (999,99 €)</td><td><code>BIENVENUE10</code></td><td class="num">999,99 €</td><td class="num">854,99 €</td></tr>
+          <tr><td>E6</td><td>1 × Samsung Galaxy S25 (849,99 €)</td><td><code>BIENVENUE10</code></td><td class="num">849,99 €</td><td class="num">714,99 €</td></tr>
+          <tr><td>E7</td><td>13 × Clean Code (39,99 €)</td><td>–</td><td class="num">519,87 €</td><td class="num">365,90 €</td></tr>
+          <tr><td>E8</td><td>10 × Clean Code (39,99 €)<br>3 × The Pragmatic Programmer (44,99 €)</td><td>–</td><td class="num">534,87 €</td><td class="num">427,90 €</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>Critères d'acceptation</h3>
+
+      <div class="gwt">
+        <div class="title">CA1 : Remise catégorie</div>
+        <div><span class="kw">Étant donné</span> la promotion P1 active</div>
+        <div><span class="kw">Quand</span> un client commande 2 × <em>Clean Code</em></div>
+        <div><span class="kw">Alors</span> le total de la commande est de 63,98 € et le détail mentionne la remise « Rentrée littéraire »</div>
+      </div>
+
+      <div class="gwt">
+        <div class="title">CA2 : Lot « X achetés, Y payés »</div>
+        <div><span class="kw">Étant donné</span> la promotion P2 active</div>
+        <div><span class="kw">Quand</span> un client commande 3 × <em>Men's T-Shirt</em></div>
+        <div><span class="kw">Alors</span> un seul des trois articles est offert et le total est de 59,98 €</div>
+      </div>
+
+      <div class="gwt">
+        <div class="title">CA3 : Remise panier</div>
+        <div><span class="kw">Étant donné</span> la promotion P3 active</div>
+        <div><span class="kw">Quand</span> un client passe une commande de 500 € ou plus</div>
+        <div><span class="kw">Alors</span> une remise de 50 € est appliquée</div>
+      </div>
+
+      <div class="gwt">
+        <div class="title">CA4 : Code promo à usage unique</div>
+        <div><span class="kw">Étant donné</span> un client ayant déjà passé une commande avec le code <code>BIENVENUE10</code></div>
+        <div><span class="kw">Quand</span> il crée une nouvelle commande avec le même code</div>
+        <div><span class="kw">Alors</span> la commande est refusée avec le message « Ce code promo a déjà été utilisé »</div>
+      </div>
+
+      <div class="gwt">
+        <div class="title">CA5 : Promotion hors période</div>
+        <div><span class="kw">Étant donné</span> une promotion dont la date de fin est dépassée</div>
+        <div><span class="kw">Quand</span> un client crée une commande éligible</div>
+        <div><span class="kw">Alors</span> la promotion n'est pas appliquée</div>
+      </div>
+
+      <div class="gwt">
+        <div class="title">CA6 : Détail des remises</div>
+        <div><span class="kw">Étant donné</span> une commande sur laquelle des promotions ont été appliquées</div>
+        <div><span class="kw">Quand</span> on consulte <code>GET /orders/{id}</code></div>
+        <div><span class="kw">Alors</span> la réponse contient le sous-total, la liste des remises (nom de la promotion, montant) et le total</div>
+      </div>
+
+      <div class="gwt">
+        <div class="title">CA7 : Gestion par le marketing</div>
+        <div><span class="kw">Étant donné</span> l'API de gestion des promotions</div>
+        <div><span class="kw">Quand</span> le marketing crée une nouvelle remise catégorie via <code>POST /promotions</code></div>
+        <div><span class="kw">Alors</span> elle s'applique aux commandes suivantes sans redéploiement</div>
+      </div>
+
+      <h3>Composants impactés</h3>
+      <ul>
+        <li><code>EntretienCiteo.Api</code> : entités, <code>AppDbContext</code> et migration EF Core</li>
+        <li><code>OrderEndpoints</code> : création de commande (code promo facultatif) et <code>GET /orders/{id}</code></li>
+        <li>Nouveaux endpoints <code>/promotions</code></li>
+      </ul>
+
+      <h3>Hors périmètre</h3>
+      <ul>
+        <li>Interface d'administration (le marketing utilisera Swagger dans un premier temps)</li>
+        <li>Frais de port et promotions associées</li>
+        <li>Recalcul des commandes déjà passées</li>
+      </ul>
+
+      <h3>Définition de terminé</h3>
+      <ul>
+        <li>Les critères d'acceptation sont couverts par des tests automatisés</li>
+        <li>Les exemples de paniers E1 à E8 sont vérifiés</li>
+        <li>La migration EF Core est fournie et s'applique au démarrage</li>
+        <li>Les endpoints sont documentés dans Swagger</li>
+      </ul>
+
+      <div class="panel info">
+        <strong>Note du PO :</strong> les exemples de paniers ont été calculés par le marketing dans un tableur.
+        N'hésitez pas à revenir vers moi en cas de question avant de démarrer.
+      </div>
+
+      <h2>Activité</h2>
+      <div class="tabs"><span class="active">Commentaires</span><span>Historique</span><span>Journal de travail</span></div>
+
+      <div class="comment">
+        <span class="avatar" style="background:#8f7ee7">CR</span>
+        <div>
+          <div class="who">Camille Roux <span class="when">Responsable marketing · il y a 3 jours</span></div>
+          <p>Pour moi c'est simple : les promos se cumulent, c'est tout l'intérêt ! Un client qui achète beaucoup doit être récompensé.</p>
+        </div>
+      </div>
+
+      <div class="comment">
+        <span class="avatar" style="background:#e56910">TG</span>
+        <div>
+          <div class="who">Thomas Garnier <span class="when">Contrôle de gestion · il y a 2 jours</span></div>
+          <p>Attention de notre côté : une commande ne doit jamais avoir une remise totale supérieure à 30 % du sous-total. On a eu le cas l'an dernier avec des ventes à perte.</p>
+        </div>
+      </div>
+
+      <div class="comment">
+        <span class="avatar" style="background:#1f845a">ML</span>
+        <div>
+          <div class="who">Marc Lemaire <span class="when">Product Owner · hier</span></div>
+          <p>Merci à tous. Je laisse l'équipe de dev proposer une solution, on en discute en affinage si besoin.</p>
+        </div>
+      </div>
+    </main>
+
+    <aside class="side">
+      <div class="head"><span class="status">À faire</span></div>
+      <dl>
+        <dt>Type</dt><dd><span class="type-icon"></span> Story</dd>
+        <dt>Responsable</dt><dd><span class="avatar" style="background:#626f86">?</span>Candidat(e)</dd>
+        <dt>Rapporteur</dt><dd><span class="avatar" style="background:#1f845a">ML</span>Marc Lemaire</dd>
+        <dt>Priorité</dt><dd><span class="prio">&#9650;</span> Haute</dd>
+        <dt>Epic</dt><dd><a href="#" style="color:var(--link);text-decoration:none">BOUT-120 Refonte du tunnel de commande</a></dd>
+        <dt>Sprint</dt><dd>Sprint 47</dd>
+        <dt>Story points</dt><dd>Non estimé</dd>
+        <dt>Étiquettes</dt><dd><span class="label">promotions</span><span class="label">commande</span><span class="label">marketing</span></dd>
+        <dt>Composant</dt><dd>API Boutique</dd>
+      </dl>
+      <div class="meta">Créé le 4 novembre 2026<br>Mis à jour le 12 novembre 2026</div>
+    </aside>
+  </div>
+</div>
+
+</body>
+</html>
